@@ -9,7 +9,12 @@
   flex-direction: column;
   gap: 1.4rem;
 }
-
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
 .cityList::-webkit-scrollbar {
   width: 0;
 }

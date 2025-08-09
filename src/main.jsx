@@ -6,6 +6,8 @@ import 'leaflet/dist/leaflet.css';
 import "react-datepicker/dist/react-datepicker.css";
 import { AuthProvider } from './contexts/AuthContext.jsx';
 
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>

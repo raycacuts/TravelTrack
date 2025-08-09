@@ -1,0 +1,36 @@
+.bar {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-top: 1px solid var(--color-dark--2, #222);
+  background: var(--color-dark--1, #111);
+  position: sticky;
+  bottom: 0;            /* sticks to the bottom inside the scrollable area */
+  z-index: 5;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.label {
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.option input {
+  accent-color: var(--color-brand--2, #4dabf7);
+}
