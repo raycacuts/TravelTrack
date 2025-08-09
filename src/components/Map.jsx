@@ -1,3 +1,4 @@
+// components/Map.jsx
 import styles from "./Map.module.css";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {
@@ -18,7 +19,7 @@ import { useGeolocation } from "../hooks/useGeolocation";
 import Button from "./Button";
 import { useUrlPosition } from "../hooks/useUrlPosition";
 
-// IMPORTANT: ensure once globally (e.g., in main.jsx):
+// IMPORTANT (ensure once globally, e.g., in main.jsx):
 // import 'leaflet/dist/leaflet.css';
 
 function toNum(v) {
@@ -26,19 +27,28 @@ function toNum(v) {
   return Number.isFinite(n) ? n : NaN;
 }
 
-// Custom ORANGE icon for planned cities
-const orangeIcon = new L.Icon({
+// --- Explicit icons so Vite doesn't drop default Leaflet images ---
+const blueIcon = new L.Icon({
   iconUrl:
-    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png",
-  shadowUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
 });
 
-function Map() {
+const orangeIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+export default function Map() {
   const navigate = useNavigate();
   const { cities } = useCities();
   const { plans } = usePlans();
@@ -137,36 +147,39 @@ function Map() {
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
 
-        {/* ---------- Markers: Visited ---------- */}
-        {sortedVisited.map((city) => {
+        {/* ---------- Markers: Visited (BLUE) ---------- */}
+        {sortedVisited.map((city, idx) => {
           const lat = toNum(city?.position?.lat);
           const lng = toNum(city?.position?.lng);
           if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+          const key = city.id || city._id || `${city.cityName ?? "visited"}-${idx}`;
           return (
-            <Marker position={[lat, lng]} key={`v-${city.id}`}>
+            <Marker position={[lat, lng]} key={`v-${key}`} icon={blueIcon}>
               <Popup>
-                <span>{city.cityName}</span>
+                <strong>{city.cityName}</strong>
+                {city.country ? <div>{city.country}</div> : null}
               </Popup>
             </Marker>
           );
         })}
 
-        {/* ---------- Markers: Planned (orange pins) ---------- */}
-        {sortedPlanned.map((plan) => {
+        {/* ---------- Markers: Planned (ORANGE) ---------- */}
+        {sortedPlanned.map((plan, idx) => {
           const lat = toNum(plan?.position?.lat);
           const lng = toNum(plan?.position?.lng);
           if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+          const key = plan.id || plan._id || `${plan.cityName ?? "planned"}-${idx}`;
           return (
-            <Marker position={[lat, lng]} key={`p-${plan.id}`} icon={orangeIcon}>
+            <Marker position={[lat, lng]} key={`p-${key}`} icon={orangeIcon}>
               <Popup>
-                <span>(Planned) {plan.cityName}</span>
+                <strong>(Planned) {plan.cityName}</strong>
+                {plan.country ? <div>{plan.country}</div> : null}
               </Popup>
             </Marker>
           );
         })}
 
         {/* ---------- Paths & Arrows ---------- */}
-        {/* Visited path: default polyline + green arrows */}
         {visitedCoords.length >= 2 && (
           <>
             <Pane name="arrows" style={{ zIndex: 650 }} />
@@ -175,19 +188,17 @@ function Map() {
           </>
         )}
 
-        {/* Planned path: ORANGE polyline + RED arrows */}
         {plannedCoords.length >= 2 && (
           <>
             <Pane name="arrows-planned" style={{ zIndex: 651 }} />
             <Polyline
               positions={plannedCoords}
-              pathOptions={{ weight: 3, opacity: 0.9, color: "#ff9800" }} // orange
+              pathOptions={{ weight: 3, opacity: 0.9, color: "#ff9800" }}
             />
             <Arrows coords={plannedCoords} color="#ff3b30" pane="arrows-planned" /> {/* red */}
           </>
         )}
 
-        {/* Connector: last visited -> first planned (orange + red arrow) */}
         {connectorCoords.length === 2 && (
           <>
             <Pane name="arrows-connector" style={{ zIndex: 652 }} />
@@ -240,13 +251,11 @@ function Arrows({ coords, color = "#4dabf7", pane = "arrows" }) {
       const a = coords[i];
       const b = coords[i + 1];
 
-      // Convert to pixel space in current view
       const p1 = map.latLngToLayerPoint(L.latLng(a[0], a[1]));
       const p2 = map.latLngToLayerPoint(L.latLng(b[0], b[1]));
       const dx = p2.x - p1.x;
       const dy = -(p2.y - p1.y); // invert Y so up is positive
 
-      // angle from +x (east), CCW; convert to CSS (clockwise)
       const angleRad = Math.atan2(dy, dx);
       const cssDeg = -(angleRad * 180) / Math.PI;
 
@@ -286,9 +295,7 @@ function Arrows({ coords, color = "#4dabf7", pane = "arrows" }) {
       );
     }
     return items;
-  }, [coords, map, styles.arrow, color, pane]);
+  }, [coords, map, color, pane]);
 
   return <>{markers}</>;
 }
-
-export default Map;
