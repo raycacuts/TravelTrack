@@ -1,0 +1,61 @@
+.cityItem,
+.cityItem:link,
+.cityItem:visited {
+  display: flex;
+  gap: 1.6rem;
+  align-items: center;
+
+  background-color: #6fa8dc; /* soft medium blue, contrasts with sidebar */
+  border-radius: 7px;
+  padding: 1rem 2rem;
+  border-left: 5px solid #3d85c6; /* deeper ocean blue accent */
+  cursor: pointer;
+
+  color: #ffffff; /* white text for readability */
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.cityItem:hover {
+  background-color: #5b9bd5; /* slightly deeper on hover */
+  transform: scale(1.02);
+}
+
+.cityItem--active {
+  border: 2px solid #3d85c6;
+  border-left: 5px solid #3d85c6;
+}
+
+.emoji {
+  font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.name {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.date {
+  font-size: 1.5rem;
+}
+
+.deleteBtn {
+  height: 2rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: none;
+  background-color: #3d85c6; /* matches accent */
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.deleteBtn:hover {
+  background-color: #c2e9fb; /* light tone from sidebar gradient */
+  color: #00334e; /* deep blue for contrast */
+}

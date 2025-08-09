@@ -1,0 +1,59 @@
+.btn {
+  color: inherit;
+  text-transform: uppercase;
+  padding: 0.9rem 1.8rem;
+  font-family: inherit;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 8px; /* smoother corners */
+  cursor: pointer;
+  transition: all 0.25s ease; /* smooth hover effect */
+  letter-spacing: 0.5px;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Elegant primary button */
+.primary {
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-brand--2), #ffdd99);
+  color: var(--color-dark--1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* Minimal, classy outline button */
+.back {
+  font-weight: 600;
+  background: transparent;
+  border: 2px solid currentColor;
+  color: var(--color-brand--2);
+  border-radius: 8px;
+}
+
+.back:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Floating position button */
+.position {
+  font-weight: 700;
+  position: absolute;
+  z-index: 1000;
+  font-size: 1.4rem;
+  bottom: 4rem;
+  left: 50%;
+  transform: scale(1.05);
+  background: linear-gradient(135deg, var(--color-brand--2), #ffdd99);
+  color: var(--color-dark--1);
+  border-radius: 50px; /* pill shape */
+  padding: 0.8rem 1.6rem;
+  box-shadow: 0 6px 18px rgba(36, 42, 46, 0.2);
+}

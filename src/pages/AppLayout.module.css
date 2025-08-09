@@ -1,0 +1,5 @@
+  .app {
+    display: grid;
+    grid-template-columns: 56rem 1fr; /* sidebar | map */
+    height: calc(100vh - 4.8rem);
+  }

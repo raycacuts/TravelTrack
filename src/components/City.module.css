@@ -1,0 +1,59 @@
+.city {
+  padding: 2rem 3rem;
+  max-height: 70%;
+  background: linear-gradient(160deg, #4f9c97, #6fb1aa); /* elegant muted teal gradient */
+  border-radius: 10px;
+  overflow: visible; /* 'show' is invalid, this fixes it */
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: "Poppins", "Segoe UI", sans-serif; /* clean modern font */
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.city h6 {
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #e6f4f3; /* soft aqua for subtle contrast */
+}
+
+.city h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #ffffff; /* clean white for readability */
+}
+
+.city h3 span {
+  font-size: 3.2rem;
+  line-height: 1;
+}
+
+.city p {
+  font-size: 1.6rem;
+  color: #f0f8f8; /* lighter text tone without being pure white */
+}
+
+.city a:link,
+.city a:visited {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #ffd27f; /* warm accent against teal */
+  text-decoration: none;
+}
+
+.city a:hover {
+  text-decoration: underline;
+}
