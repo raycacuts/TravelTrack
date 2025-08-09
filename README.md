@@ -1,8 +1,38 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Track places you've been and spots you want to go. Works with a React frontend and Node.js backend.
 
-Currently, two official plugins are available:
+## Features
+- Log visited cities and planned trips
+- Interactive map with markers and travel lines
+- User login/signup with JWT
+- Upload avatar
+- Mobile friendly
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech
+**Frontend**
+- React + Vite
+- Leaflet
+- React Router
+- CSS Modules
+
+**Backend**
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT Auth
+- Multer uploads
+- Helmet, CORS, Rate Limit
+
+## Setup
+
+### Backend
+```bash
+cd server
+npm install
+# make a .env file
+PORT=8080
+MONGODB_URI=your_mongodb_uri
+JWT_SECRET=your_secret
+CORS_ORIGINS=http://localhost:5173
+UPLOAD_DIR=uploads
+npm run dev
