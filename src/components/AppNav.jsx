@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styles from "./AppNav.module.css";
+import PlanList from "./PlanList";
 
 function AppNav() {
   return (
@@ -10,6 +11,9 @@ function AppNav() {
         </li>
         <li>
           <NavLink to="countries">Countries</NavLink>
+        </li>
+        <li>
+          <NavLink to="plans">Plans</NavLink>
         </li>
       </ul>
     </nav>

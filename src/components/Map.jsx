@@ -13,6 +13,7 @@ import {
 import L from "leaflet";
 import { useState, useEffect, useMemo } from "react";
 import { useCities } from "../contexts/CitiesContext";
+import { usePlans } from "../contexts/PlansContext";
 import { useGeolocation } from "../hooks/useGeolocation";
 import Button from "./Button";
 import { useUrlPosition } from "../hooks/useUrlPosition";
@@ -25,9 +26,22 @@ function toNum(v) {
   return Number.isFinite(n) ? n : NaN;
 }
 
+// Custom ORANGE icon for planned cities
+const orangeIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png",
+  shadowUrl:
+    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
 function Map() {
   const navigate = useNavigate();
   const { cities } = useCities();
+  const { plans } = usePlans();
 
   const [mapPosition, setMapPosition] = useState([40, 0]);
   const [searchParams] = useSearchParams();
@@ -43,8 +57,8 @@ function Map() {
     if (geoLocationPosition) setMapPosition([geoLocationPosition.lat, geoLocationPosition.lng]);
   }, [geoLocationPosition]);
 
-  // Sort by time (oldest -> newest); invalid dates go last
-  const sortedCities = useMemo(() => {
+  // ---------- Sort (oldest → newest) ----------
+  const sortedVisited = useMemo(() => {
     const safe = Array.isArray(cities) ? cities : [];
     return [...safe].sort((a, b) => {
       const da = Date.parse(a?.date);
@@ -55,17 +69,53 @@ function Map() {
     });
   }, [cities]);
 
-  // Build path coords (numbers only)
-  const pathCoords = useMemo(() => {
-    return sortedCities
-      .map((c) => {
-        const lat = toNum(c?.position?.lat);
-        const lng = toNum(c?.position?.lng);
-        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-        return [lat, lng];
-      })
-      .filter(Boolean);
-  }, [sortedCities]);
+  const sortedPlanned = useMemo(() => {
+    const safe = Array.isArray(plans) ? plans : [];
+    return [...safe].sort((a, b) => {
+      const da = Date.parse(a?.date);
+      const db = Date.parse(b?.date);
+      const va = Number.isFinite(da) ? da : Infinity;
+      const vb = Number.isFinite(db) ? db : Infinity;
+      return va - vb;
+    });
+  }, [plans]);
+
+  // ---------- Build coords ----------
+  const visitedCoords = useMemo(
+    () =>
+      sortedVisited
+        .map((c) => {
+          const lat = toNum(c?.position?.lat);
+          const lng = toNum(c?.position?.lng);
+          if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+          return [lat, lng];
+        })
+        .filter(Boolean),
+    [sortedVisited]
+  );
+
+  const plannedCoords = useMemo(
+    () =>
+      sortedPlanned
+        .map((p) => {
+          const lat = toNum(p?.position?.lat);
+          const lng = toNum(p?.position?.lng);
+          if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+          return [lat, lng];
+        })
+        .filter(Boolean),
+    [sortedPlanned]
+  );
+
+  // ---------- Connector: last visited -> first planned ----------
+  const connectorCoords = useMemo(() => {
+    if (visitedCoords.length < 1 || plannedCoords.length < 1) return [];
+    const lastVisited = visitedCoords[visitedCoords.length - 1];
+    const firstPlanned = plannedCoords[0];
+    if (!lastVisited || !firstPlanned) return [];
+    if (lastVisited[0] === firstPlanned[0] && lastVisited[1] === firstPlanned[1]) return [];
+    return [lastVisited, firstPlanned];
+  }, [visitedCoords, plannedCoords]);
 
   return (
     <div className={styles.mapContainer}>
@@ -87,27 +137,65 @@ function Map() {
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
 
-        {/* City markers */}
-        {sortedCities.map((city) => {
+        {/* ---------- Markers: Visited ---------- */}
+        {sortedVisited.map((city) => {
           const lat = toNum(city?.position?.lat);
           const lng = toNum(city?.position?.lng);
           if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
           return (
-            <Marker position={[lat, lng]} key={city.id}>
+            <Marker position={[lat, lng]} key={`v-${city.id}`}>
               <Popup>
-                {/* <span>{city.emoji}</span> */}
                 <span>{city.cityName}</span>
               </Popup>
             </Marker>
           );
         })}
 
-        {/* Path + arrows */}
-        {pathCoords.length >= 2 && (
+        {/* ---------- Markers: Planned (orange pins) ---------- */}
+        {sortedPlanned.map((plan) => {
+          const lat = toNum(plan?.position?.lat);
+          const lng = toNum(plan?.position?.lng);
+          if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+          return (
+            <Marker position={[lat, lng]} key={`p-${plan.id}`} icon={orangeIcon}>
+              <Popup>
+                <span>(Planned) {plan.cityName}</span>
+              </Popup>
+            </Marker>
+          );
+        })}
+
+        {/* ---------- Paths & Arrows ---------- */}
+        {/* Visited path: default polyline + green arrows */}
+        {visitedCoords.length >= 2 && (
           <>
             <Pane name="arrows" style={{ zIndex: 650 }} />
-            <Polyline positions={pathCoords} pathOptions={{ weight: 3, opacity: 0.9 }} />
-            <Arrows coords={pathCoords} />
+            <Polyline positions={visitedCoords} pathOptions={{ weight: 3, opacity: 0.9 }} />
+            <Arrows coords={visitedCoords} color="#2ecc71" /> {/* green */}
+          </>
+        )}
+
+        {/* Planned path: ORANGE polyline + RED arrows */}
+        {plannedCoords.length >= 2 && (
+          <>
+            <Pane name="arrows-planned" style={{ zIndex: 651 }} />
+            <Polyline
+              positions={plannedCoords}
+              pathOptions={{ weight: 3, opacity: 0.9, color: "#ff9800" }} // orange
+            />
+            <Arrows coords={plannedCoords} color="#ff3b30" pane="arrows-planned" /> {/* red */}
+          </>
+        )}
+
+        {/* Connector: last visited -> first planned (orange + red arrow) */}
+        {connectorCoords.length === 2 && (
+          <>
+            <Pane name="arrows-connector" style={{ zIndex: 652 }} />
+            <Polyline
+              positions={connectorCoords}
+              pathOptions={{ weight: 3, opacity: 0.9, dashArray: "6 6", color: "#ff9800" }}
+            />
+            <Arrows coords={connectorCoords} color="#ff3b30" pane="arrows-connector" />
           </>
         )}
 
@@ -133,11 +221,10 @@ function DetectClick() {
 }
 
 /** Arrows rendered using SCREEN-space angles so direction is always correct */
-function Arrows({ coords }) {
+function Arrows({ coords, color = "#4dabf7", pane = "arrows" }) {
   const map = useMap();
   const [, force] = useState(0);
 
-  // Recompute angles when map moves/zooms so arrows keep pointing correctly
   useEffect(() => {
     const onUpdate = () => force((v) => v + 1);
     map.on("zoomend moveend", onUpdate);
@@ -172,8 +259,12 @@ function Arrows({ coords }) {
         font-size: 24px;
         line-height: 24px;
         pointer-events: none;
-        color: #61f74dff;
-        text-shadow: 0 0 2px rgba(0,0,0,.65);
+        color: ${color};
+        text-shadow:
+          -1px -1px 0 #000,
+           1px -1px 0 #000,
+          -1px  1px 0 #000,
+           1px  1px 0 #000;
       ">➤</div>`;
 
       const icon = L.divIcon({
@@ -185,17 +276,17 @@ function Arrows({ coords }) {
 
       items.push(
         <Marker
-          key={`arrow-${i}`}
+          key={`arrow-${pane}-${i}`}
           position={mid}
           icon={icon}
           interactive={false}
           keyboard={false}
-          pane="arrows"
+          pane={pane}
         />
       );
     }
     return items;
-  }, [coords, map, styles.arrow]);
+  }, [coords, map, styles.arrow, color, pane]);
 
   return <>{markers}</>;
 }

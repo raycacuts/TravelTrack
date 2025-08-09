@@ -9,9 +9,11 @@ import CityList from "./components/CityList";
 import CountryList from "./components/CountryList";
 import City from "./components/City";
 import Form from "./components/Form";
-
+import PlanList from "./components/PlanList";      // ✅ NEW
+import Plan from "./components/Plan";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CitiesProvider } from "./contexts/CitiesContext";
+import { PlansProvider } from "./contexts/PlansContext"; // ✅ NEW
 import ProtectedRoute from "./pages/ProtectedRoute";
 
 // Send authed users away from "/" to "/app"
@@ -24,27 +26,31 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <CitiesProvider>
-          <Routes>
-            <Route index element={<Homepage />} />
-            <Route path="login" element={<Login />} />
-            <Route
-              path="app"
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate replace to="cities" />} />
-              <Route path="cities" element={<CityList />} />
-              <Route path="cities/:id" element={<City />} />
-              <Route path="countries" element={<CountryList />} />
-              <Route path="form" element={<Form />} />
-            </Route>
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </CitiesProvider>
+        <PlansProvider>          {/* ✅ wrap plans first or second—order doesn't matter */}
+          <CitiesProvider>
+            <Routes>
+              <Route index element={<HomeGate />} />          {/* ✅ use HomeGate */}
+              <Route path="login" element={<Login />} />
+              <Route
+                path="app"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Navigate replace to="cities" />} />
+                <Route path="cities" element={<CityList />} />
+                <Route path="cities/:id" element={<City />} />
+                <Route path="countries" element={<CountryList />} />
+                <Route path="plans" element={<PlanList />} />   {/* ✅ new route */}
+                <Route path="plans/:id" element={<Plan />} /> 
+                <Route path="form" element={<Form />} />
+              </Route>
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </CitiesProvider>
+        </PlansProvider>
       </AuthProvider>
     </BrowserRouter>
   );

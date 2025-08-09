@@ -1,6 +1,6 @@
-import styles from "./CityItem.module.css";
+import styles from "./PlanItem.module.css";
 import { Link } from "react-router-dom";
-import { useCities } from "../contexts/CitiesContext";
+import { usePlans } from "../contexts/PlansContext";
 
 const formatDate = (date) => {
   const d = new Date(date);
@@ -12,32 +12,33 @@ const formatDate = (date) => {
   }).format(d);
 };
 
-function CityItem({ city }) {
-  const { currentCity, deleteCity } = useCities();
-  const { cityName, emoji, date, id, position } = city || {};
+function PlanItem({ plan }) {
+  const { currentPlan, deletePlan } = usePlans();
+  const { cityName, date, id, position } = plan || {};
 
-  const isActive = String(id) === String(currentCity?.id);
+  const isActive = String(id) === String(currentPlan?.id);
 
-  // Build link with lat/lng only if available
-  const hasPos = position && typeof position.lat === "number" && typeof position.lng === "number";
+  const hasPos =
+    position &&
+    typeof position.lat === "number" &&
+    typeof position.lng === "number";
   const href = hasPos
-    ? `/app/cities/${id}?lat=${position.lat}&lng=${position.lng}`
-    : `/app/cities/${id}`;
+    ? `/app/plans/${id}?lat=${position.lat}&lng=${position.lng}`
+    : `/app/plans/${id}`;
 
   function handleDelete(e) {
     e.preventDefault();
     e.stopPropagation();
-    deleteCity(id);
+    deletePlan(id);
   }
 
   return (
     <li>
       <Link
-        className={`${styles.cityItem} ${isActive ? styles["cityItem--active"] : ""}`}
+        className={`${styles.planItem} ${isActive ? styles["planItem--active"] : ""}`}
         to={href}
         title={cityName}
       >
-       
         <h3 className={styles.name}>{cityName}</h3>
         <time className={styles.date}>{formatDate(date)}</time>
 
@@ -45,7 +46,7 @@ function CityItem({ city }) {
           type="button"
           className={styles.deleteBtn}
           onClick={handleDelete}
-          aria-label={`Delete ${cityName}`}
+          aria-label={`Delete plan for ${cityName}`}
         >
           &times;
         </button>
@@ -54,4 +55,4 @@ function CityItem({ city }) {
   );
 }
 
-export default CityItem;
+export default PlanItem;

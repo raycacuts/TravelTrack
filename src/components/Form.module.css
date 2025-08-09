@@ -42,3 +42,5 @@
   font-family: inherit;
   font-size: 1.2rem;
 }
+.inline { display: flex; gap: 1rem; align-items: center; }
+.radio { display: inline-flex; gap: .4rem; align-items: center; }

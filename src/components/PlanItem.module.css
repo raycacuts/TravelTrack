@@ -1,0 +1,61 @@
+.planItem,
+.planItem:link,
+.planItem:visited {
+  display: flex;
+  gap: 1.6rem;
+  align-items: center;
+
+  background-color: #f9b233; /* warm gold background */
+  border-radius: 7px;
+  padding: 1rem 2rem; /* same as cityItem */
+  border-left: 5px solid #d18b00; /* orange accent */
+  cursor: pointer;
+
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.planItem:hover {
+  background-color: #e69a00; /* slightly deeper on hover */
+  transform: scale(1.02);
+}
+
+.planItem--active {
+  border: 2px solid #d18b00;
+  border-left: 5px solid #d18b00;
+}
+
+.planItem .emoji {
+  font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+  font-size: 2.6rem; /* same as cityItem */
+  line-height: 1;
+}
+
+.planItem .name {
+  font-size: 1.7rem; /* same as cityItem */
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.planItem .date {
+  font-size: 1.5rem;
+}
+
+.planItem .deleteBtn {
+  height: 2rem; /* same as cityItem */
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: none;
+  background-color: #d18b00; /* matches accent */
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.planItem .deleteBtn:hover {
+  background-color: #ffe6b3;
+  color: #663c00;
+}

@@ -1,5 +1,4 @@
 // "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=0&longitude=0"
-
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,6 +11,7 @@ import { useUrlPosition } from "../hooks/useUrlPosition";
 import Message from "./Message";
 import Spinner from "./Spinner";
 import { useCities } from "../contexts/CitiesContext";
+import { usePlans } from "../contexts/PlansContext";
 import { useNavigate } from "react-router-dom";
 
 export function convertToEmoji(countryCode) {
@@ -27,6 +27,7 @@ const BASE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 function Form() {
   const [lat, lng] = useUrlPosition();
   const { createCity, isLoading } = useCities();
+  const { createPlan } = usePlans();
   const navigate = useNavigate();
 
   const [isLoadingGeocoding, setIsLoadingGeocoding] = useState(false);
@@ -36,6 +37,7 @@ function Form() {
   const [notes, setNotes] = useState("");
   const [emoji, setEmoji] = useState("");
   const [geocodingError, setGeocodingError] = useState("");
+  const [type, setType] = useState("visited"); // 'visited' | 'plan'
 
   useEffect(
     function () {
@@ -50,7 +52,6 @@ function Form() {
             `${BASE_URL}?latitude=${lat}&longitude=${lng}`
           );
           const data = await res.json();
-          console.log(data);
 
           if (!data.countryCode)
             throw new Error(
@@ -58,7 +59,7 @@ function Form() {
             );
 
           setCityName(data.city || data.locality || "");
-          setCountry(data.countryName);
+          setCountry(data.countryName || "");
           setEmoji(convertToEmoji(data.countryCode));
         } catch (err) {
           setGeocodingError(err.message);
@@ -73,10 +74,9 @@ function Form() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
     if (!cityName || !date) return;
 
-    const newCity = {
+    const payload = {
       cityName,
       country,
       emoji,
@@ -85,8 +85,13 @@ function Form() {
       position: { lat, lng },
     };
 
-    await createCity(newCity);
-    navigate("/app/cities");
+    if (type === "plan") {
+      await createPlan(payload);
+      navigate("/app/plans");
+    } else {
+      await createCity(payload);
+      navigate("/app/cities");
+    }
   }
 
   if (isLoadingGeocoding) return <Spinner />;
@@ -101,8 +106,35 @@ function Form() {
       className={`${styles.form} ${isLoading ? styles.loading : ""}`}
       onSubmit={handleSubmit}
     >
+      {/* Type selector */}
       <div className={styles.row}>
-        <label htmlFor="cityName">City name</label>
+        <label>Type</label>
+        <div className={styles.inline}>
+          <label className={styles.radio}>
+            <input
+              type="radio"
+              name="type"
+              value="visited"
+              checked={type === "visited"}
+              onChange={() => setType("visited")}
+            />
+            Visited
+          </label>
+          <label className={styles.radio}>
+            <input
+              type="radio"
+              name="type"
+              value="plan"
+              checked={type === "plan"}
+              onChange={() => setType("plan")}
+            />
+            Plan
+          </label>
+        </div>
+      </div>
+
+      <div className={styles.row}>
+        <label htmlFor="cityName">{type === "plan" ? "City to plan" : "City name"}</label>
         <input
           id="cityName"
           onChange={(e) => setCityName(e.target.value)}
@@ -112,18 +144,20 @@ function Form() {
       </div>
 
       <div className={styles.row}>
-        <label htmlFor="date">When did you go to {cityName}?</label>
+        <label htmlFor="date">
+          {type === "plan" ? `When do you plan to go?` : `When did you go to ${cityName || "this city"}?`}
+        </label>
 
         <DatePicker
           id="date"
-          onChange={(date) => setDate(date)}
+          onChange={(d) => setDate(d)}
           selected={date}
           dateFormat="dd/MM/yyyy"
         />
       </div>
 
       <div className={styles.row}>
-        <label htmlFor="notes">Notes about your trip to {cityName}</label>
+        <label htmlFor="notes">{type === "plan" ? "Notes for your plan" : "Notes about your trip"}</label>
         <textarea
           id="notes"
           onChange={(e) => setNotes(e.target.value)}
@@ -132,7 +166,7 @@ function Form() {
       </div>
 
       <div className={styles.buttons}>
-        <Button type="primary">Add</Button>
+        <Button type="primary">{type === "plan" ? "Save Plan" : "Add"}</Button>
         <BackButton />
       </div>
     </form>
