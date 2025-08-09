@@ -1,12 +1,8 @@
-# React + Vite
-
-Track places you've been and spots you want to go. Works with a React frontend and Node.js backend.
 
 ## Features
 - Log visited cities and planned trips
 - Interactive map with markers and travel lines
 - User login/signup with JWT
-- Upload avatar
 - Mobile friendly
 
 ## Tech
