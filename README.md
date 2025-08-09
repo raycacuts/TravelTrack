@@ -5,6 +5,11 @@
 - User login/signup with JWT
 - Mobile friendly
 
+## Live Demo
+- **Frontend:** [https://witty-dune-0cb8be810.2.azurestaticapps.net](https://witty-dune-0cb8be810.2.azurestaticapps.net)
+- **Frontend GitHub:** [https://github.com/raycacuts/TravelTrack/tree/main]
+- **Backend GitHub:** [https://github.com/raycacuts/TravelTrackBackend]
+
 ## Tech
 **Frontend**
 - React + Vite
