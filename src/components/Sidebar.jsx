@@ -11,7 +11,7 @@ export default function Sidebar() {
       <Logo />
       <AppNav />
 
-      {/* Nested routes under /app render here: CityList, City, CountryList, Form */}
+      
       <Outlet />
 
       <footer className={styles.footer}>

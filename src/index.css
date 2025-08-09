@@ -72,22 +72,14 @@ input:focus {
 }
 
 .cta:hover {
-  transform: scale(1.05); /* grows slightly */
+  transform: scale(1.05); 
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .cta:active {
-  transform: scale(1.02); /* slightly smaller than hover for click feedback */
+  transform: scale(1.02); 
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 
 
-/*
-"importCSSModule": {
-    "prefix": "csm",
-    "scope": "javascript,typescript,javascriptreact",
-    "body": ["import styles from './${TM_FILENAME_BASE}.module.css'"],
-    "description": "Import CSS Module as `styles`"
-  },
-*/

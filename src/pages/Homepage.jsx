@@ -8,9 +8,9 @@ export default function Homepage() {
         <PageNav/>
       <section>
         <h1>
-          You travel the world.
+          You go places.
           <br />
-          TravelTrack keeps track of your adventures.
+          TravelTrack keeps your adventures in one place.
         </h1>
         <h2>
           A world map that records every step of your journey, 

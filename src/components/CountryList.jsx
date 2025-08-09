@@ -6,12 +6,9 @@ import Message from "./Message";
 import SortBar from "./SortBar";
 import { useCities } from "../contexts/CitiesContext";
 
-/**
- * Build countries with a representative date so we can sort by time.
- * We'll use the latest visit date for each country.
- */
+
 function aggregateCountries(cities) {
-  const map = new Map(); // country -> { country, emoji, latestDate }
+  const map = new Map();
   for (const c of cities || []) {
     const key = c.country;
     const prev = map.get(key);
@@ -27,8 +24,8 @@ function aggregateCountries(cities) {
 
 function CountryList() {
   const { cities, isLoading } = useCities();
-  const [sortKey, setSortKey] = useState("name"); // 'name' | 'date'
-  const [sortOrder, setSortOrder] = useState("asc"); // 'asc' | 'desc'
+  const [sortKey, setSortKey] = useState("name"); 
+  const [sortOrder, setSortOrder] = useState("asc");
 
   const countries = useMemo(() => aggregateCountries(cities), [cities]);
 
@@ -42,7 +39,7 @@ function CountryList() {
         if (av > bv) return sortOrder === "asc" ? 1 : -1;
         return 0;
       } else {
-        // by latest visit date
+
         const av = a.latestDate || 0;
         const bv = b.latestDate || 0;
         return sortOrder === "asc" ? av - bv : bv - av;
@@ -67,7 +64,7 @@ function CountryList() {
         ))}
       </ul>
 
-      {/* Sort controls at the bottom */}
+
       <SortBar sortKey={sortKey} sortOrder={sortOrder} onChange={handleSortChange} showDate />
     </div>
   );

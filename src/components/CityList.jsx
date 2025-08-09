@@ -9,8 +9,8 @@ import { useCities } from "../contexts/CitiesContext";
 function CityList() {
   const { cities, isLoading } = useCities();
 
-  const [sortKey, setSortKey] = useState("date"); // 'name' | 'date'
-  const [sortOrder, setSortOrder] = useState("desc"); // 'asc' | 'desc'
+  const [sortKey, setSortKey] = useState("date"); 
+    const [sortOrder, setSortOrder] = useState("desc"); 
 
   const sorted = useMemo(() => {
     if (!Array.isArray(cities)) return [];
@@ -49,7 +49,7 @@ function CityList() {
         ))}
       </ul>
 
-      {/* Sort controls at the bottom */}
+
       <SortBar sortKey={sortKey} sortOrder={sortOrder} onChange={handleSortChange} showDate />
     </div>
   );
