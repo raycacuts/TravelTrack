@@ -25,12 +25,17 @@ export default function PlanForm() {
   const [cityName, setCityName] = useState("");
   const [country, setCountry] = useState("");
   const [date, setDate] = useState(new Date());
+
+
   const [notes, setNotes] = useState("");
   const [emoji, setEmoji] = useState("");
   const [geocodingError, setGeocodingError] = useState("");
 
   useEffect(() => {
+
     if (!lat && !lng) return;
+
+
     (async () => {
       try {
         setIsLoadingGeocoding(true);
@@ -40,6 +45,7 @@ export default function PlanForm() {
 
         setCityName(data.city || data.locality || "");
         setCountry(data.countryName || "");
+
         setEmoji(data.countryCode ? convertToEmoji(data.countryCode) : "");
       } catch (err) {
         setGeocodingError(err.message);
@@ -60,28 +66,38 @@ export default function PlanForm() {
       notes,
       position: { lat, lng },
     };
+
     await createPlan(newPlan);
     navigate("/app/plans");
   }
 
   if (isLoadingGeocoding) return <Spinner />;
+
+
   if (!lat && !lng) return <Message message="Start by clicking somewhere on the map" />;
-  if (geocodingError) return <Message message={geocodingError} />;
+  
+if (geocodingError) return <Message message={geocodingError} />;
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.row}>
+
         <label htmlFor="cityName">City to plan</label>
+
         <input id="cityName" value={cityName} onChange={(e) => setCityName(e.target.value)} />
+       
         <span className={styles.flag}>{emoji}</span>
       </div>
 
       <div className={styles.row}>
+
         <label htmlFor="date">When do you plan to go?</label>
+
         <DatePicker id="date" onChange={setDate} selected={date} dateFormat="dd/MM/yyyy" />
       </div>
 
       <div className={styles.row}>
+        
         <label htmlFor="notes">Notes</label>
         <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
       </div>

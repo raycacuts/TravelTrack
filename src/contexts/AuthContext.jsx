@@ -12,6 +12,8 @@ const initial = {
 };
 
 function reducer(state, action) {
+
+
   switch (action.type) {
     case "hydrate": {
       const { user, token } = action.payload || {};
@@ -23,6 +25,7 @@ function reducer(state, action) {
         token: token || null,
       };
     }
+
     case "start":
       return { ...state, loading: true, error: null };
     case "login":
@@ -62,6 +65,7 @@ export function AuthProvider({ children }) {
   async function login(email, password) {
     try {
       dispatch({ type: "start" });
+
       const res = await fetch(`${API}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,8 +73,11 @@ export function AuthProvider({ children }) {
       });
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
-      localStorage.setItem("ww_token", data.token);
+
+   localStorage.setItem("ww_token", data.token);
       localStorage.setItem("ww_user", JSON.stringify(data.user));
+
+
       dispatch({ type: "login", user: data.user, token: data.token });
     } catch (e) {
       dispatch({ type: "error", error: "Login failed" });
@@ -81,9 +88,11 @@ export function AuthProvider({ children }) {
   async function register(name, email, password) {
     try {
       dispatch({ type: "start" });
+
       const res = await fetch(`${API}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+
         body: JSON.stringify({ name, email, password }),
       });
       if (!res.ok) throw new Error(await res.text());
@@ -122,7 +131,9 @@ export function AuthProvider({ children }) {
   }
 
   return (
+
     <AuthContext.Provider
+    
       value={{ ...state, login, register, logout, loginGuest, updateUser }}
     >
       {children}

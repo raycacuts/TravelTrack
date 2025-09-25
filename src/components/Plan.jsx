@@ -1,12 +1,14 @@
-import styles from "./City.module.css"; // reuse same styles
+import styles from "./City.module.css"; 
 import { useParams } from "react-router-dom";
 import BackButton from "./BackButton";
 import { useEffect } from "react";
+
 import { usePlans } from "../contexts/PlansContext";
 import Spinner from "./Spinner";
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
+
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -14,12 +16,16 @@ const formatDate = (date) =>
   }).format(new Date(date));
 
 function Plan() {
+
   const { id } = useParams();
+
+
   const { currentPlan, getPlan, isLoading } = usePlans();
   const { cityName, emoji, date, notes } = currentPlan || {};
 
   useEffect(() => {
     getPlan(id);
+
   }, [id, getPlan]);
 
   if (isLoading) return <Spinner />;
@@ -27,7 +33,9 @@ function Plan() {
   return (
     <div className={styles.city}>
       <div className={styles.row}>
+
         <h6>Planned city</h6>
+
         <h3>
           {/* <span>{emoji}</span> */}
           {cityName}
@@ -35,6 +43,7 @@ function Plan() {
       </div>
 
       <div className={styles.row}>
+
         <h6>You plan to go to {cityName} on</h6>
         <p>{formatDate(date || null)}</p>
       </div>
@@ -42,12 +51,14 @@ function Plan() {
       {notes && (
         <div className={styles.row}>
           <h6>Your notes</h6>
+
           <p>{notes}</p>
         </div>
       )}
 
       <div className={styles.row}>
         <h6>Learn more</h6>
+        
         <a
           href={`https://en.wikipedia.org/wiki/${cityName}`}
           target="_blank"

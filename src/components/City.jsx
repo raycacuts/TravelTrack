@@ -2,32 +2,38 @@ import styles from "./City.module.css";
 import { useParams, useSearchParams } from "react-router-dom";
 import BackButton from "./BackButton";
 import {useState, useEffect} from "react";
+
 import { useCities } from "../contexts/CitiesContext";
 import Spinner from "./Spinner";
 
+
 const formatDate = (date) =>
   new Intl.DateTimeFormat("en", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+  day: "numeric",
+   month: "long",
+  year: "numeric",
     weekday: "long",
+
   }).format(new Date(date));
 
 function City() {
+
   const {id} = useParams();
 
   const {currentCity, getCity, isLoading} = useCities();
+
+
   const { cityName, emoji, date, notes } = currentCity;
   
-  
-
   useEffect(function() {
     getCity(id);
+
   }, [id]);
 
   if(isLoading) return <Spinner/>;
   
   return (
+
     <div className={styles.city}>
       <div className={styles.row}>
         <h6>City name</h6>
@@ -52,15 +58,18 @@ function City() {
       <div className={styles.row}>
         <h6>Learn more</h6>
         <a
+          
           href={`https://en.wikipedia.org/wiki/${cityName}`}
           target="_blank"
           rel="noreferrer"
         >
+
           Check out {cityName} on Wikipedia &rarr;
         </a>
       </div>
 
       <div>
+        
         <BackButton />
       </div>
     </div>

@@ -1,16 +1,19 @@
 .city {
   padding: 2rem 3rem;
   max-height: 70%;
-  background: linear-gradient(160deg, #4f9c97, #6fb1aa); /* elegant muted teal gradient */
+  background: linear-gradient(160deg, #4f9c97, #6fb1aa); 
   border-radius: 10px;
-  overflow: visible; /* 'show' is invalid, this fixes it */
+  overflow: visible; 
 
-  width: 100%;
+  width:   100%;
   display: flex;
+
   flex-direction: column;
-  gap: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: "Poppins", "Segoe UI", sans-serif; /* clean modern font */
+  gap: 2rem;       
+   
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);  
+   
+  font-family: "Poppins", "Segoe UI", sans-serif;
 }
 
 .row {
@@ -24,7 +27,7 @@
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #e6f4f3; /* soft aqua for subtle contrast */
+  color: #e6f4f3; 
 }
 
 .city h3 {
@@ -33,7 +36,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: #ffffff; /* clean white for readability */
+  color: #ffffff; 
 }
 
 .city h3 span {
@@ -43,14 +46,17 @@
 
 .city p {
   font-size: 1.6rem;
-  color: #f0f8f8; /* lighter text tone without being pure white */
+
+  color: #f0f8f8;
 }
 
 .city a:link,
 .city a:visited {
   font-size: 1.6rem;
   font-weight: 500;
-  color: #ffd27f; /* warm accent against teal */
+  
+  color: #ffd27f;
+
   text-decoration: none;
 }
 

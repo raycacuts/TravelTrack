@@ -13,6 +13,7 @@ const formatDate = (date) => {
 };
 
 function PlanItem({ plan }) {
+  
   const { currentPlan, deletePlan } = usePlans();
   const { cityName, date, id, position } = plan || {};
 
@@ -35,14 +36,18 @@ function PlanItem({ plan }) {
   return (
     <li>
       <Link
+
         className={`${styles.planItem} ${isActive ? styles["planItem--active"] : ""}`}
         to={href}
         title={cityName}
       >
+
         <h3 className={styles.name}>{cityName}</h3>
+
         <time className={styles.date}>{formatDate(date)}</time>
 
         <button
+
           type="button"
           className={styles.deleteBtn}
           onClick={handleDelete}

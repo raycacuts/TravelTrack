@@ -10,6 +10,7 @@ export default function AppLayout() {
     <div className={styles.app}>
       {/* Outlet is rendered INSIDE Sidebar */}
       <Sidebar />
+      
       <Map />
       <User />
     </div>

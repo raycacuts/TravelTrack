@@ -5,6 +5,8 @@ function CountryItem({ country }) {
     <li className={styles.countryItem}>
 
       <span>{country.country}</span>
+
+      
     </li>
   );
 }

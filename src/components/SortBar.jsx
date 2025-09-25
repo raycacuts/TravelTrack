@@ -2,15 +2,18 @@ import { useId } from "react";
 import styles from "./SortBar.module.css";
 
 export default function SortBar({ sortKey, sortOrder, onChange, showDate = true }) {
+  
   const nameId = useId();
   const dateId = useId();
+
   const ascId = useId();
   const descId = useId();
 
   return (
     <div className={styles.bar}>
       <div className={styles.group}>
-        <span className={styles.label}>Sort by</span>
+
+      <span className={styles.label}>Sort by</span>
         <label className={styles.option}>
           <input
             type="radio"
@@ -24,12 +27,13 @@ export default function SortBar({ sortKey, sortOrder, onChange, showDate = true 
         </label>
 
         {showDate && (
+
           <label className={styles.option}>
             <input
-              type="radio"
+           type="radio"
               name="sortKey"
               value="date"
-              checked={sortKey === "date"}
+            checked={sortKey === "date"}
               onChange={() => onChange({ sortKey: "date" })}
               aria-labelledby={dateId}
             />
@@ -39,11 +43,12 @@ export default function SortBar({ sortKey, sortOrder, onChange, showDate = true 
       </div>
 
       <div className={styles.group}>
+
         <span className={styles.label}>Order</span>
         <label className={styles.option}>
           <input
             type="radio"
-            name="sortOrder"
+              name="sortOrder"
             value="asc"
             checked={sortOrder === "asc"}
             onChange={() => onChange({ sortOrder: "asc" })}
@@ -52,17 +57,23 @@ export default function SortBar({ sortKey, sortOrder, onChange, showDate = true 
           <span id={ascId}>Asc</span>
         </label>
 
+
+
+
         <label className={styles.option}>
           <input
             type="radio"
             name="sortOrder"
             value="desc"
+
             checked={sortOrder === "desc"}
             onChange={() => onChange({ sortOrder: "desc" })}
             aria-labelledby={descId}
           />
+
           <span id={descId}>Desc</span>
         </label>
+
       </div>
     </div>
   );

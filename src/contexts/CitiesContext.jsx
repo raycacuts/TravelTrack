@@ -133,6 +133,7 @@ export function CitiesProvider({ children }) {
     }
 
     if (!isAuthenticated || !token) {
+      
       dispatch({ type: "cities/loaded", payload: [] });
       return;
     }
@@ -141,11 +142,15 @@ export function CitiesProvider({ children }) {
       try {
         const data = await fetchWithAuth(`/cities`);
         dispatch({
+
+
           type: "cities/loaded",
           payload: Array.isArray(data) ? data.map(normalize) : [],
         });
       } catch {
+
         dispatch({
+
           type: "rejected",
           payload: "There was an error loading cities...",
         });
@@ -154,23 +159,30 @@ export function CitiesProvider({ children }) {
   }, [guest, isAuthenticated, token, fetchWithAuth]);
 
   const getCity = useCallback(
+
     async function getCity(id) {
       if (!id) return;
+
       if (String(id) === String(currentCity.id)) return;
 
       dispatch({ type: "loading" });
 
       try {
         if (guest) {
+
           const found = (cities || []).find((c) => String(c.id) === String(id));
+          
           if (!found) throw new Error("Not found");
           dispatch({ type: "city/loaded", payload: found });
           return;
         }
 
         const data = await fetchWithAuth(`/cities/${id}`);
+
         dispatch({ type: "city/loaded", payload: normalize(data) });
-      } catch {
+      }
+      
+      catch {
         dispatch({
           type: "rejected",
           payload: "There was an error loading the city...",
@@ -181,17 +193,21 @@ export function CitiesProvider({ children }) {
   );
 
   const createCity = useCallback(
+
     async function createCity(newCity) {
       dispatch({ type: "loading" });
 
       try {
         if (guest) {
           const created = {
+
             ...newCity,
             id: `guest-${Date.now()}`,
+
           };
           const updated = [...cities, created];
           saveGuestCities(updated);
+
           dispatch({ type: "city/created", payload: created });
           return;
         }
@@ -199,11 +215,13 @@ export function CitiesProvider({ children }) {
         const created = await fetchWithAuth(`/cities`, {
           method: "POST",
           body: JSON.stringify(newCity),
+
         });
         dispatch({ type: "city/created", payload: normalize(created) });
       } catch {
         dispatch({
           type: "rejected",
+
           payload: "There was an error creating the city...",
         });
       }
@@ -217,14 +235,18 @@ export function CitiesProvider({ children }) {
 
       try {
         if (guest) {
+
           const updated = cities.filter((c) => c.id !== id);
           saveGuestCities(updated);
+
           dispatch({ type: "city/deleted", payload: id });
           return;
         }
 
         await fetchWithAuth(`/cities/${id}`, { method: "DELETE" });
         dispatch({ type: "city/deleted", payload: id });
+
+
       } catch {
         dispatch({
           type: "rejected",
@@ -254,6 +276,7 @@ export function CitiesProvider({ children }) {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useCities() {
+
   const ctx = useContext(CitiesContext);
   if (ctx === undefined)
     throw new Error("CitiesContext was used outside the CitiesProvider");
